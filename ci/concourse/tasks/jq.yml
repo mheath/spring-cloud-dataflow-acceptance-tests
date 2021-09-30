@@ -1,0 +1,24 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: harbor-repo.vmware.com/dockerhub-proxy-cache/realguess/jq
+    tag: latest
+
+inputs:
+- name: input
+
+outputs:
+- name: output
+
+params:
+  file:
+  expression:
+
+run:
+  dir: input
+  path: sh
+  args:
+  - '-exc'
+  - jq -r ${expression} ${file} > ../output/output.json

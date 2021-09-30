@@ -1,0 +1,54 @@
+---
+jobs:
+- name: acceptance-tests
+  plan:
+  - in_parallel:
+    - put: shepherd-pool
+        params:
+        action: create
+        lifetime: 7200 # Lifetime in seconds
+        resource: shepherd-pool
+    - get: acceptance-tests
+        trigger: true
+  - task: parse-shepherd-lock
+    file: acceptance-tests/ci/concourse/tasks/jq.yml
+    input_mapping:
+      input: shepherd-pool
+    output_mapping:
+      output: shepherd-access
+    params:
+      file: lock.json
+      expression: .access
+  - task: extract-kubectl-yaml
+    file: acceptance-tests/ci/concourse/tasks/jq.yml
+    input_mapping:
+      input: shepherd-access
+    output_mapping:
+      output: kube-config
+    params:
+      file: output.json
+      expression: .tkg[].kubeconfig
+  - task: run-acceptance-tests    
+    file: acceptance-tests/ci/concourse/task/run-acceptance-tests.yml
+
+resource_types:
+- name: shepherd
+  type: docker-image
+  source:
+    repository: gcr.io/eminent-nation-87317/shepherd-resource
+    tag: latest
+
+resources:
+- name: acceptance-tests
+  type: git
+  icon: github
+  check_every: 60s
+  source:
+    repository: https://github.com/mheath/spring-cloud-dataflow-acceptance-tests
+- name: shepherd-pool
+  type: shepherd
+  source:
+    target: shepherd.run
+    config:
+      namespace: spring-cloud-dataflow
+      pool: tkg-nimbus-1_4
