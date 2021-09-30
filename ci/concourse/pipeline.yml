@@ -5,9 +5,9 @@ jobs:
   - in_parallel:
     - put: shepherd-pool
         params:
-        action: create
-        lifetime: 7200 # Lifetime in seconds
-        resource: shepherd-pool
+          action: create
+          lifetime: 7200 # Lifetime in seconds
+          resource: shepherd-pool
     - get: acceptance-tests
         trigger: true
   - task: parse-shepherd-lock
