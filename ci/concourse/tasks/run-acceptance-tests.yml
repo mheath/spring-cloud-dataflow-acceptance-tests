@@ -1,0 +1,26 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: harbor-repo.vmware.com/dockerhub-proxy-cache/openjdk:11
+    tag: latest
+
+inputs:
+- name: kubeconfig
+- name: acceptance-tests
+
+params:
+  kubeconfig_file:
+  scdf_version:
+  skipper_version:
+
+run:
+  dir: acceptance-tests
+  path: sh
+  args:
+  - '-exc'
+  - export KUBECONFIG=`pwd`/../kubeconfig/${kubeconfig_ßfile}
+  - ./run.sh clean -p kubernetes
+  - ./run.sh setup -p kubernetes -b rabbit -dv ${scdf_version} -sv ${skipper_version}
+  - ./run.sh tests -p kubernetes -b rabbit
