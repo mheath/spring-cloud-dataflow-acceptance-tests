@@ -3,8 +3,8 @@ platform: linux
 image_resource:
   type: registry-image
   source:
-    repository: harbor-repo.vmware.com/dockerhub-proxy-cache/openjdk:11
-    tag: latest
+    repository: harbor-repo.vmware.com/dockerhub-proxy-cache/openjdk
+    tag: 11
 
 inputs:
 - name: kubeconfig
