@@ -20,7 +20,7 @@ run:
   path: sh
   args:
   - '-exc'
-  - export KUBECONFIG=`pwd`/../kubeconfig/${kubeconfig_ßfile}
+  - export KUBECONFIG=`pwd`/../kubeconfig/${kubeconfig_file}
   - ./run.sh clean -p kubernetes
   - ./run.sh setup -p kubernetes -b rabbit -dv ${scdf_version} -sv ${skipper_version}
   - ./run.sh tests -p kubernetes -b rabbit
